@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import javax.sql.DataSource;
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class JdbcReservationDao implements ReservationDao {
@@ -17,7 +18,9 @@ public class JdbcReservationDao implements ReservationDao {
 
     @Override
     public int createReservation(int siteId, String name, LocalDate fromDate, LocalDate toDate) {
-        return -1;
+        // Null checking?!
+        String sql = "INSERT INTO reservation (site_id, name, from_date, to_date) VALUES (?, ?, ?, ?) RETURNING reservation_id;";
+        return jdbcTemplate.queryForObject(sql, int.class, siteId, name, fromDate, toDate);
     }
 
     private Reservation mapRowToReservation(SqlRowSet results) {
@@ -30,6 +33,4 @@ public class JdbcReservationDao implements ReservationDao {
         r.setCreateDate(results.getDate("create_date").toLocalDate());
         return r;
     }
-
-
 }
