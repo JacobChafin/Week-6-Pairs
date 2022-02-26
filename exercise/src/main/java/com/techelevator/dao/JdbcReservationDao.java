@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 
 public class JdbcReservationDao implements ReservationDao {
 
@@ -20,7 +21,12 @@ public class JdbcReservationDao implements ReservationDao {
     public int createReservation(int siteId, String name, LocalDate fromDate, LocalDate toDate) {
         // Null checking?!
         String sql = "INSERT INTO reservation (site_id, name, from_date, to_date) VALUES (?, ?, ?, ?) RETURNING reservation_id;";
-        return jdbcTemplate.queryForObject(sql, int.class, siteId, name, fromDate, toDate);
+        return jdbcTemplate.queryForObject(sql, Integer.class, siteId, name, fromDate, toDate);
+    }
+
+    @Override
+    public List<Reservation> getUpcomingReservationsByParkId(int parkId) {
+        return null;
     }
 
     private Reservation mapRowToReservation(SqlRowSet results) {
