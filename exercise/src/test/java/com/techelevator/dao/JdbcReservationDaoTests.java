@@ -6,34 +6,24 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.Assert.assertEquals;
 
 public class JdbcReservationDaoTests extends BaseDaoTests {
-//    /* test reservations */
-//    /**** future */
-//    INSERT INTO reservation(site_id, name, from_date, to_date, create_date)
-//    VALUES (1, 'Test Testerson', CURRENT_DATE + 1, CURRENT_DATE + 5, CURRENT_DATE - 23); -- reservation_id will be 1 due to serial
-//
-//    INSERT INTO reservation(site_id, name, from_date, to_date, create_date)
-//    VALUES (1, 'Bob Robertson', CURRENT_DATE + 11, CURRENT_DATE + 18, CURRENT_DATE - 23); -- reservation_id will be 2 due to serial
-//
-//    /**** present */
-//    INSERT INTO reservation(site_id, name, from_date, to_date, create_date)
-//    VALUES (1, 'Manager Managerson', CURRENT_DATE - 5, CURRENT_DATE + 2, CURRENT_DATE - 23); -- reservation_id will be 3 due to serial
-//
-//    /**** past */
-//    INSERT INTO reservation(site_id, name, from_date, to_date, create_date)
-//    VALUES (1, 'Leonard Leonardson', CURRENT_DATE - 11, CURRENT_DATE - 18, CURRENT_DATE - 23); -- reservation_id will be 4 due to serial
 
-//    private int reservationId;
-//    private int siteId;
-//    private String name;
-//    private LocalDate fromDate;
-//    private LocalDate toDate;
-//    private LocalDate createDate;
+     private static final Reservation RESERVATION_1 = new Reservation(1,1, "Test Testerson",
+             LocalDate.now().plus(1, DAYS), LocalDate.now().plus(5, DAYS), LocalDate.now().minus(23, DAYS));
 
-    // private static final Reservation RESERVATION_1 = new Reservation(1, "Test Testerson", )
+    private static final Reservation RESERVATION_2 = new Reservation(2,1, "Bob Robertson",
+            LocalDate.now().plus(11, DAYS), LocalDate.now().plus(18, DAYS), LocalDate.now().minus(23, DAYS));
+
+    private static final Reservation RESERVATION_3 = new Reservation(3,1, "Manager Managerson",
+            LocalDate.now().minus(5, DAYS), LocalDate.now().plus(2, DAYS), LocalDate.now().minus(23, DAYS));
+
+    private static final Reservation RESERVATION_4 = new Reservation(4,1, "Leonard Leonardson",
+            LocalDate.now().minus(11, DAYS), LocalDate.now().minus(18, DAYS), LocalDate.now().minus(23, DAYS));
 
     private ReservationDao dao;
 
@@ -55,10 +45,20 @@ public class JdbcReservationDaoTests extends BaseDaoTests {
     @Test
     public void getUpcomingReservationsByParkId_returns_correct_number_of_reservations() {
 
+        //Arrange
+        int expectedSize = 2;
+
+        //Act
+        List<Reservation> actualReservations = dao.getUpcomingReservationsByParkId(1);
+        //Assert
+        Assert.assertEquals(expectedSize, actualReservations.size());
+        assertReservationsMatch(RESERVATION_1, actualReservations.get(0));
+        assertReservationsMatch(RESERVATION_2, actualReservations.get(1));
+
     }
 
     // helper method to compare two reservations
-    private void reservationsMatch(Reservation expected, Reservation actual) {
+    private void assertReservationsMatch(Reservation expected, Reservation actual) {
         Assert.assertEquals(expected.getReservationId(), actual.getReservationId());
         Assert.assertEquals(expected.getSiteId(), actual.getSiteId());
         Assert.assertEquals(expected.getName(), actual.getName());
