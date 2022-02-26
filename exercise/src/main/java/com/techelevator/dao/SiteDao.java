@@ -8,4 +8,7 @@ import java.util.List;
 public interface SiteDao {
 
     List<Site> getSitesThatAllowRVs(int parkId);
+
+    // Also Checks overlap of current guests with reservations
+    List<Site> getAvailableSites(int parkId);
 }
