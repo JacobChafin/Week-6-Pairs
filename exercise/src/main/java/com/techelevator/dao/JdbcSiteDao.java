@@ -54,6 +54,8 @@ public class JdbcSiteDao implements SiteDao {
     public List<Site> getAvailableSitesDateRange(int parkId, LocalDate fromDate, LocalDate toDate) {
         // TODO: Null checking?!?!?!?!
 
+        // This would likely be better split into two separate SQL queries for readability
+        // Throws out entire site if there is a data entry error
         List<Site> sites = new ArrayList<>();
         String sql = "SELECT site_id, site.campground_id, site_number, max_occupancy, accessible, max_rv_length, utilities " +
                 "FROM site " +
