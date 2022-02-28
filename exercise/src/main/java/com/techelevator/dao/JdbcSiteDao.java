@@ -67,9 +67,7 @@ public class JdbcSiteDao implements SiteDao {
                 "FROM reservation " +
                 "JOIN site ON reservation.site_id = site.site_id " +
                 "JOIN campground ON campground.campground_id = site.campground_id " +
-                "WHERE park_id = ? AND ((? BETWEEN from_date AND to_date) OR ? BETWEEN from_date AND to_date) " +
-                "OR from_date > to_date " +
-                ");";
+                "WHERE  park_id = ? AND ((? BETWEEN from_date AND to_date) OR ? BETWEEN from_date AND to_date));";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, parkId, parkId, fromDate, toDate);
         while (results.next())
