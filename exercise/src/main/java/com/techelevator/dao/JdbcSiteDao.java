@@ -1,11 +1,11 @@
 package com.techelevator.dao;
 
-import com.techelevator.model.Campground;
 import com.techelevator.model.Site;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +47,28 @@ public class JdbcSiteDao implements SiteDao {
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, parkId);
         while (results.next())
             sites.add(mapRowToSite(results));
+        return sites;
+    }
+
+    @Override
+    public List<Site> getAvailableSitesDateRange(int parkId, LocalDate fromDate, LocalDate toDate) {
+        // TODO: Null checking
+        /*
+        List<Site> sites = new ArrayList<>();
+        String sql = "SELECT site.site_id, site.campground_id, site_number, max_occupancy, accessible, max_rv_length, utilities " +
+                "FROM site " +
+                "JOIN reservation ON site.site_id = reservation.site_id " +
+                "JOIN campground ON site.campground_id = campground.campground_id " +
+                "WHERE (? > to_date OR ? < from_date) AND park_id = ? AND to_date > from_date " +
+                "ORDER BY site_id;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, fromDate, toDate, parkId);
+        while (results.next())
+            sites.add(mapRowToSite(results));
+        return sites;
+
+         */
+        List<Site> sites = new ArrayList<>();
+        JdbcReservationDao reservationDao = new JdbcReservationDao(jdbcTemplate.getDataSource());
         return sites;
     }
 

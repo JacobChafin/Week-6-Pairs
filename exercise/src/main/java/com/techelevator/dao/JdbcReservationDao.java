@@ -20,7 +20,7 @@ public class JdbcReservationDao implements ReservationDao {
 
     @Override
     public int createReservation(int siteId, String name, LocalDate fromDate, LocalDate toDate) {
-        // Null checking?!
+        // TODO: Null Checking
         String sql = "INSERT INTO reservation (site_id, name, from_date, to_date) VALUES (?, ?, ?, ?) RETURNING reservation_id;";
         return jdbcTemplate.queryForObject(sql, Integer.class, siteId, name, fromDate, toDate);
     }

@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -24,18 +25,28 @@ public class JdbcSiteDaoTests extends BaseDaoTests {
 
     @Test
     public void getSitesThatAllowRVs_Should_ReturnSites() {
-        List<Site> sites = dao.getSitesThatAllowRVs(1);
+        // Arrange
+        int testParkId = 1;
+        int expectedSize = 2;
 
-        assertEquals(2,sites.size());
+        // Act
+        List<Site> sites = dao.getSitesThatAllowRVs(testParkId);
+        int actualSize = sites.size();
+
+        // Assert
+        assertEquals(expectedSize, actualSize);
+        assertSitesMatch(SITE_1, sites.get(0));
+        assertSitesMatch(SITE_2, sites.get(1));
     }
 
     @Test
     public void getAvailableSites_Should_ReturnSites() {
         // Arrange
         int expectedSize = 2;
+        int testParkId = 1;
 
         // Act
-        List<Site> actual = dao.getAvailableSites(1);
+        List<Site> actual = dao.getAvailableSites(testParkId);
         int actualSize = actual.size();
 
         // Assert
@@ -44,8 +55,19 @@ public class JdbcSiteDaoTests extends BaseDaoTests {
         assertSitesMatch(SITE_3, actual.get(1));
     }
 
+    @Test
     public void getAvailableSitesDateRange_Should_ReturnSites() {
+        // Arrange
+        int expectedSize = 2;
 
+        // Act
+        List<Site> sites = dao.getAvailableSitesDateRange(1, LocalDate.now().plusDays(3), LocalDate.now().plusDays(5));
+        int actualSize = sites.size();
+
+        // Assert
+        Assert.assertEquals(expectedSize, actualSize);
+        assertSitesMatch(SITE_2, sites.get(0));
+        assertSitesMatch(SITE_3, sites.get(1));
     }
 
     private void assertSitesMatch(Site expected, Site actual) {

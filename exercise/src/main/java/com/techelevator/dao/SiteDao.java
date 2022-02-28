@@ -9,6 +9,7 @@ public interface SiteDao {
 
     List<Site> getSitesThatAllowRVs(int parkId);
 
-    // Also Checks overlap of current guests with reservations
     List<Site> getAvailableSites(int parkId);
+
+    List<Site> getAvailableSitesDateRange(int parkId, LocalDate fromDate, LocalDate toDate);
 }
