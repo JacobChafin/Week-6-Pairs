@@ -52,23 +52,26 @@ public class JdbcSiteDao implements SiteDao {
 
     @Override
     public List<Site> getAvailableSitesDateRange(int parkId, LocalDate fromDate, LocalDate toDate) {
-        // TODO: Null checking
-        /*
+        // TODO: Null checking?!?!?!?!
+
         List<Site> sites = new ArrayList<>();
-        String sql = "SELECT site.site_id, site.campground_id, site_number, max_occupancy, accessible, max_rv_length, utilities " +
+        String sql = "SELECT site_id, site.campground_id, site_number, max_occupancy, accessible, max_rv_length, utilities " +
                 "FROM site " +
-                "JOIN reservation ON site.site_id = reservation.site_id " +
                 "JOIN campground ON site.campground_id = campground.campground_id " +
-                "WHERE (? > to_date OR ? < from_date) AND park_id = ? AND to_date > from_date " +
-                "ORDER BY site_id;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, fromDate, toDate, parkId);
+                "WHERE park_id = ? " +
+                "AND site.site_id NOT IN " +
+                "(" +
+                "SELECT reservation.site_id " +
+                "FROM reservation " +
+                "JOIN site ON reservation.site_id = site.site_id " +
+                "JOIN campground ON campground.campground_id = site.campground_id " +
+                "WHERE park_id = ? AND ((? BETWEEN from_date AND to_date) OR ? BETWEEN from_date AND to_date) " +
+                "OR from_date > to_date " +
+                ");";
+
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, parkId, parkId, fromDate, toDate);
         while (results.next())
             sites.add(mapRowToSite(results));
-        return sites;
-
-         */
-        List<Site> sites = new ArrayList<>();
-        JdbcReservationDao reservationDao = new JdbcReservationDao(jdbcTemplate.getDataSource());
         return sites;
     }
 
